@@ -122,8 +122,6 @@ DRAW_MESSAGES = [
 ]
 
 
-import random
-
 def rook_comment_from_delta(delta_cp: int) -> str:
     if delta_cp is None:
         return "The Rook tilts his head. Hard to read, even for granite muscles."
