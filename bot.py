@@ -122,29 +122,72 @@ DRAW_MESSAGES = [
 ]
 
 
+import random
+
 def rook_comment_from_delta(delta_cp: int) -> str:
-    # delta_cp > 0  => ton coup améliore ta position
-    # delta_cp < 0  => ton coup affaiblit ta position
     if delta_cp is None:
-        return "The Rook tilts his head. That move is hard even for concrete muscles to rate."
+        return "The Rook tilts his head. Hard to read, even for granite muscles."
 
     loss = -delta_cp if delta_cp < 0 else 0
     gain = delta_cp if delta_cp > 0 else 0
 
+    gain_big = [
+        "The Rook squints. That move pumps {} points of raw value. Impressive.",
+        "The Rook flexes subtly. A {} point gain shakes the board.",
+        "The Rook grunts approval. {} points of pure progress.",
+        "Concrete muscles approve this {} point upgrade."
+    ]
+
+    gain_small = [
+        "The Rook nods. A clean {} point step forward.",
+        "Respectable. {} points in your favor.",
+        "The Rook taps the board. {} points gained. Not bad.",
+        "A modest {} point improvement. The Rook notices."
+    ]
+
+    neutral = [
+        "The Rook shrugs. Nothing big changed here.",
+        "A quiet move. The Rook stays unimpressed.",
+        "Stable. No real muscle gained or lost.",
+        "The Rook blinks once. Balanced outcome."
+    ]
+
+    loss_small = [
+        "The Rook smirks. You just dropped about {} points. Sloppy.",
+        "The Rook shakes his head. {} points lost in silence.",
+        "You leaked {} points. The Rook felt that weakness.",
+        "A {} point slip. The Rook inhales deeply."
+    ]
+
+    loss_medium = [
+        "The Rook laughs. You leaked {} points of muscle. Bad choice.",
+        "Concrete advantage dissolves. {} points lost.",
+        "A painful {} point drop. The Rook expected more.",
+        "You just deflated by {} points. Brutal."
+    ]
+
+    loss_big = [
+        "The Rook roars. Losing {} points is a blunder carved in stone.",
+        "You collapse by {} points. The Rook tastes victory already.",
+        "A catastrophic {} point implosion. The Rook feasts on this.",
+        "That {} point disaster echoes across the board."
+    ]
+
     if gain >= 120:
-        return f"The Rook squints. That move pumps about {gain} points of raw value. Impressive."
+        return random.choice(gain_big).format(gain)
     if gain >= 50:
-        return f"The Rook nods. Solid move, you gained around {gain} points of position."
+        return random.choice(gain_small).format(gain)
     if -40 <= delta_cp <= 40:
-        return "The Rook shrugs. Decent move, nothing huge changed on the board."
+        return random.choice(neutral)
     if loss >= 80 and loss < 200:
-        return f"The Rook smirks. You just dropped roughly {loss} points of strength. Sloppy."
+        return random.choice(loss_small).format(loss)
     if loss >= 200 and loss < 400:
-        return f"The Rook laughs. That move leaks about {loss} points of muscle. Bad choice."
+        return random.choice(loss_medium).format(loss)
     if loss >= 400:
-        return f"The Rook roars. You just threw away nearly {loss} points. That is a blunder carved in stone."
-    # petite perte
-    return "The Rook feels a small crack in your position. Not losing yet, but it smells."
+        return random.choice(loss_big).format(loss)
+
+    return random.choice(loss_small).format(loss if loss > 0 else 0)
+
 
 
 async def create_new_game(user, guild):
